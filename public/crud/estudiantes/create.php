@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include '../../../../analisis2_notas/includes/db.php';
 include '../../../../analisis2_notas/public/header.php';
 
@@ -58,7 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php } ?>
     </select><br><br>
     
-    <input type="submit" value="Guardar">
+    <input type="submit" value="Guardar" class="btn btn-success">
+    <a href="index.php" class="btn btn-secondary">Cancelar</a>
 </form>
 
 <?php include '../../../../analisis2_notas/public/footer.php'; ?>

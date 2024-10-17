@@ -41,7 +41,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
+                    <span>Mantenimientos</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -54,18 +54,20 @@
                 </div>
             </li>
 
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="departamentos">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Departamentos</span></a>
-            </li>
+            <hr class="sidebar-divider my-0">
 
-            <!-- Nav Item - Tables -->
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="empleados">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Empleados</span></a>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                    aria-expanded="true" aria-controls="collapsePages">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Procesos</span>
+                </a>
+                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="../../../../analisis2_notas/public/procesos/inscripciones/">Inscripciones</a>
+                    </div>
+                </div>
             </li>
 
             <!-- Divider -->

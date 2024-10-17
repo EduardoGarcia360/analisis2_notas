@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include '../../../../analisis2_notas/includes/db.php';
 include '../../../../analisis2_notas/public/header.php';
 

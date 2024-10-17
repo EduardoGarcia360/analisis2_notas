@@ -48,6 +48,7 @@
                         <a class="collapse-item" href="../../../../analisis2_notas/public/crud/colegio/">Colegios</a>
                         <a class="collapse-item" href="../../../../analisis2_notas/public/crud/estudiantes/">Estudiantes</a>
                         <a class="collapse-item" href="../../../../analisis2_notas/public/crud/maestros/">Maestros</a>
+                        <a class="collapse-item" href="../../../../analisis2_notas/public/crud/personalAdministrativo/">Personal Admin.</a>
                     </div>
                 </div>
             </li>

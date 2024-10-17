@@ -6,101 +6,95 @@ include '../../../../analisis2_notas/public/header.php';
 // Obtener el ID de la inscripción desde la URL
 $id_inscripcion = $_GET['id'];
 
-// Verificar si se envió el formulario
+// Consultar los detalles actuales de la inscripción, incluyendo el colegio
+$sql = "SELECT inscripciones.*, estudiantes.id_colegio 
+        FROM inscripciones 
+        INNER JOIN estudiantes ON inscripciones.id_estudiante = estudiantes.id_estudiante 
+        WHERE inscripciones.id_inscripcion='$id_inscripcion'";
+$result = $conn->query($sql);
+$inscripcion = $result->fetch_assoc();
+
+$id_estudiante = $inscripcion['id_estudiante'];
+$id_curso = $inscripcion['id_curso'];
+$id_colegio = $inscripcion['id_colegio'];  // Recuperar el colegio del estudiante
+$fecha_inscripcion = $inscripcion['fecha_inscripcion'];  // Recuperar la fecha de inscripción
+
+// Cargar los colegios
+$colegios = $conn->query("SELECT id_colegio, nombre FROM colegio");
+
+// Cargar cursos y estudiantes según los datos actuales
+$cursos = $conn->query("SELECT cursos.id_curso, cursos.nombre FROM cursos WHERE id_curso='$id_curso'");
+$estudiantes = $conn->query("SELECT estudiantes.id_estudiante, estudiantes.nombre FROM estudiantes WHERE id_colegio='$id_colegio'");
+
+// Verificar si se ha enviado el formulario de actualización
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_estudiante = $_POST['id_estudiante'];
     $id_curso = $_POST['id_curso'];
     $fecha_inscripcion = $_POST['fecha_inscripcion'];
 
     // Actualizar los datos en la base de datos
-    $sql = "UPDATE inscripciones SET id_estudiante='$id_estudiante', id_curso='$id_curso', fecha_inscripcion='$fecha_inscripcion' 
-            WHERE id_inscripcion='$id_inscripcion'";
+    $sql = "UPDATE inscripciones SET id_estudiante='$id_estudiante', id_curso='$id_curso', fecha_inscripcion='$fecha_inscripcion' WHERE id_inscripcion='$id_inscripcion'";
     if ($conn->query($sql) === TRUE) {
         header("Location: index.php");
     } else {
         echo "Error al actualizar: " . $conn->error;
     }
-} else {
-    // Obtener los datos actuales de la inscripción
-    $sql = "SELECT * FROM inscripciones WHERE id_inscripcion='$id_inscripcion'";
-    $result = $conn->query($sql);
-    $inscripcion = $result->fetch_assoc();
-
-    // Obtener los colegios
-    $sql_colegios = "SELECT id_colegio, nombre FROM colegio";
-    $result_colegios = $conn->query($sql_colegios);
-
-    // Obtener estudiantes y cursos asociados al colegio de la inscripción
-    $sql_estudiantes = "SELECT id_estudiante, nombre FROM estudiantes WHERE id_colegio=(SELECT id_colegio FROM cursos WHERE id_curso='".$inscripcion['id_curso']."')";
-    $result_estudiantes = $conn->query($sql_estudiantes);
-
-    $sql_cursos = "SELECT id_curso, nombre FROM cursos WHERE id_colegio=(SELECT id_colegio FROM cursos WHERE id_curso='".$inscripcion['id_curso']."')";
-    $result_cursos = $conn->query($sql_cursos);
 }
 ?>
 
 <h2>Editar Inscripción</h2>
 <form method="POST">
     <label>Colegio:</label><br>
-    <select name="id_colegio" id="id_colegio" required>
+    <select name="id_colegio" id="colegio" required onchange="cargarEstudiantes()">
         <option value="">Selecciona un colegio</option>
-        <?php while ($colegio = $result_colegios->fetch_assoc()) { ?>
-            <option value="<?php echo $colegio['id_colegio']; ?>" <?php if ($colegio['id_colegio'] == $inscripcion['id_colegio']) echo 'selected'; ?>>
+        <?php while ($colegio = $colegios->fetch_assoc()) { ?>
+            <option value="<?php echo $colegio['id_colegio']; ?>" <?php if ($id_colegio == $colegio['id_colegio']) echo 'selected'; ?>>
                 <?php echo $colegio['nombre']; ?>
             </option>
         <?php } ?>
     </select><br><br>
 
-    <label>Estudiante:</label><br>
-    <select name="id_estudiante" id="id_estudiante" required>
-        <?php while ($estudiante = $result_estudiantes->fetch_assoc()) { ?>
-            <option value="<?php echo $estudiante['id_estudiante']; ?>" <?php if ($estudiante['id_estudiante'] == $inscripcion['id_estudiante']) echo 'selected'; ?>>
-                <?php echo $estudiante['nombre']; ?>
-            </option>
-        <?php } ?>
-    </select><br><br>
-
     <label>Curso:</label><br>
-    <select name="id_curso" id="id_curso" required>
-        <?php while ($curso = $result_cursos->fetch_assoc()) { ?>
-            <option value="<?php echo $curso['id_curso']; ?>" <?php if ($curso['id_curso'] == $inscripcion['id_curso']) echo 'selected'; ?>>
+    <select name="id_curso" id="curso" required>
+        <option value="">Selecciona un curso</option>
+        <?php while ($curso = $cursos->fetch_assoc()) { ?>
+            <option value="<?php echo $curso['id_curso']; ?>" <?php if ($id_curso == $curso['id_curso']) echo 'selected'; ?>>
                 <?php echo $curso['nombre']; ?>
             </option>
         <?php } ?>
     </select><br><br>
 
+    <label>Estudiante:</label><br>
+    <select name="id_estudiante" id="estudiante" required>
+        <option value="">Selecciona un estudiante</option>
+        <?php while ($estudiante = $estudiantes->fetch_assoc()) { ?>
+            <option value="<?php echo $estudiante['id_estudiante']; ?>" <?php if ($id_estudiante == $estudiante['id_estudiante']) echo 'selected'; ?>>
+                <?php echo $estudiante['nombre']; ?>
+            </option>
+        <?php } ?>
+    </select><br><br>
+
     <label>Fecha de Inscripción:</label><br>
-    <input type="date" name="fecha_inscripcion" value="<?php echo $inscripcion['fecha_inscripcion']; ?>" required><br><br>
+    <input type="date" name="fecha_inscripcion" value="<?php echo $fecha_inscripcion; ?>" required><br><br>
 
     <input type="submit" value="Guardar Cambios" class="btn btn-success">
     <a href="index.php" class="btn btn-secondary">Cancelar</a>
 </form>
 
-<script>
-// Función para actualizar estudiantes y cursos según el colegio seleccionado
-document.getElementById('id_colegio').addEventListener('change', function() {
-    var colegio_id = this.value;
-
-    if (colegio_id) {
-        var xhrEstudiantes = new XMLHttpRequest();
-        xhrEstudiantes.open('GET', 'get_estudiantes.php?colegio_id=' + colegio_id, true);
-        xhrEstudiantes.onload = function() {
-            if (this.status === 200) {
-                document.getElementById('id_estudiante').innerHTML = this.responseText;
-            }
-        };
-        xhrEstudiantes.send();
-
-        var xhrCursos = new XMLHttpRequest();
-        xhrCursos.open('GET', 'get_cursos.php?colegio_id=' + colegio_id, true);
-        xhrCursos.onload = function() {
-            if (this.status === 200) {
-                document.getElementById('id_curso').innerHTML = this.responseText;
-            }
-        };
-        xhrCursos.send();
-    }
-});
-</script>
-
 <?php include '../../../../analisis2_notas/public/footer.php'; ?>
+
+<script>
+// Cargar los estudiantes según el colegio seleccionado
+function cargarEstudiantes() {
+    var colegioId = document.getElementById("colegio").value;
+    fetch('getEstudiantes.php?id_colegio=' + colegioId)
+        .then(response => response.json())
+        .then(data => {
+            var estudianteSelect = document.getElementById("estudiante");
+            estudianteSelect.innerHTML = '<option value="">Selecciona un estudiante</option>';
+            data.forEach(estudiante => {
+                estudianteSelect.innerHTML += '<option value="' + estudiante.id_estudiante + '">' + estudiante.nombre + '</option>';
+            });
+        });
+}
+</script>

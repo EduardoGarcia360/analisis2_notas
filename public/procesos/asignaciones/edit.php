@@ -19,20 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "Error al actualizar: " . $conn->error;
     }
 } else {
-    // Obtener los datos actuales de la asignación
-    $sql = "SELECT * FROM asignaciones WHERE id_asignacion='$id_asignacion'";
+    // Obtener los datos actuales de la asignación, incluyendo el colegio a través del curso
+    $sql = "SELECT asignaciones.id_curso, asignaciones.id_maestro, cursos.id_colegio 
+            FROM asignaciones 
+            INNER JOIN cursos ON asignaciones.id_curso = cursos.id_curso 
+            WHERE asignaciones.id_asignacion='$id_asignacion'";
     $result = $conn->query($sql);
     $asignacion = $result->fetch_assoc();
+
+    $id_colegio = $asignacion['id_colegio'];
 
     // Obtener los colegios
     $sql_colegios = "SELECT id_colegio, nombre FROM colegio";
     $result_colegios = $conn->query($sql_colegios);
 
     // Obtener cursos y maestros según el colegio de la asignación
-    $sql_cursos = "SELECT id_curso, nombre FROM cursos WHERE id_colegio=(SELECT id_colegio FROM cursos WHERE id_curso='".$asignacion['id_curso']."')";
+    $sql_cursos = "SELECT id_curso, nombre FROM cursos WHERE id_colegio='$id_colegio'";
     $result_cursos = $conn->query($sql_cursos);
 
-    $sql_maestros = "SELECT id_maestro, nombre FROM maestros WHERE id_colegio=(SELECT id_colegio FROM cursos WHERE id_curso='".$asignacion['id_curso']."')";
+    $sql_maestros = "SELECT id_maestro, nombre FROM maestros WHERE id_colegio='$id_colegio'";
     $result_maestros = $conn->query($sql_maestros);
 }
 ?>
@@ -43,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <select name="id_colegio" id="id_colegio" required>
         <option value="">Selecciona un colegio</option>
         <?php while ($colegio = $result_colegios->fetch_assoc()) { ?>
-            <option value="<?php echo $colegio['id_colegio']; ?>" <?php if ($colegio['id_colegio'] == $asignacion['id_colegio']) echo 'selected'; ?>>
+            <option value="<?php echo $colegio['id_colegio']; ?>" <?php if ($colegio['id_colegio'] == $id_colegio) echo 'selected'; ?>>
                 <?php echo $colegio['nombre']; ?>
             </option>
         <?php } ?>

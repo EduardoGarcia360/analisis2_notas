@@ -49,6 +49,7 @@
                         <a class="collapse-item" href="../../../../analisis2_notas/public/crud/estudiantes/">Estudiantes</a>
                         <a class="collapse-item" href="../../../../analisis2_notas/public/crud/maestros/">Maestros</a>
                         <a class="collapse-item" href="../../../../analisis2_notas/public/crud/personalAdministrativo/">Personal Admin.</a>
+                        <a class="collapse-item" href="../../../../analisis2_notas/public/crud/cursos/">Cursos</a>
                     </div>
                 </div>
             </li>

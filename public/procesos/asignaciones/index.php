@@ -26,8 +26,12 @@ $result = $conn->query($sql);
             <td><?php echo $row['nombre_curso']; ?></td>
             <td><?php echo $row['nombre_maestro']; ?></td>
             <td>
-                <a href="edit.php?id=<?php echo $row['id_asignacion']; ?>" class="btn btn-warning btn-sm">Editar</a>
-                <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="confirmDelete(<?php echo $row['id_asignacion']; ?>)">Eliminar</a>
+                <a href="edit.php?id=<?php echo $row['id_asignacion']; ?>" class="btn btn-sm">
+                    <img src="../../../../analisis2_notas/assets/img/editar.png" alt="Editar" style="width:30px; height:30px;">
+                </a>
+                <a href="javascript:void(0);" class="btn btn-sm" onclick="confirmDelete(<?php echo $row['id_asignacion']; ?>)">
+                    <img src="../../../../analisis2_notas/assets/img/eliminar.png" alt="Eliminar" style="width:30px; height:30px;">
+                </a>
             </td>
         </tr>
     <?php } ?>

@@ -5,10 +5,10 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <footer class="sticky-footer bg-gradient-secondary">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Analisis 2</span>
+                        <span class="text-white">Analisis 2</span>
                     </div>
                 </div>
             </footer>

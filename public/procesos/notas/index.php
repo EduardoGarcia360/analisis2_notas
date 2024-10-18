@@ -11,6 +11,7 @@ $result = $conn->query($sql);
 ?>
 <h2>Lista de Notas</h2>
 <a href="create.php" class="btn btn-primary mb-3">Añadir Nota</a>
+<a href="generate_pdf.php" class="btn btn-info mb-3 ms-2">Generar PDF</a>
 <table class="table table-striped table-bordered">
     <tr>
         <th>ID</th>
